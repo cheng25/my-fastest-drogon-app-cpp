@@ -30,3 +30,19 @@ target_link_libraries(${PROJECT_NAME}
 )
 add_compile_options(-Wno-deprecated-declarations)
 
+# 1. 设置源配置文件路径（假设在项目根目录）
+set(CONFIG_FILE  "${CMAKE_CURRENT_SOURCE_DIR}/config.json")
+
+# 2. 检查配置文件是否存在
+if(NOT EXISTS ${CONFIG_FILE})
+    message(FATAL_ERROR "配置文件不存在: ${CONFIG_FILE}")
+endif()
+
+# 3. 添加拷贝命令（在构建后自动执行）
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CONFIG_FILE}"                                # 源文件
+        "$<TARGET_FILE_DIR:${PROJECT_NAME}>"            # 目标目录（自动解析）
+        COMMENT "正在拷贝配置文件到: $<TARGET_FILE_DIR:${PROJECT_NAME}>"
+        VERBATIM
+)
