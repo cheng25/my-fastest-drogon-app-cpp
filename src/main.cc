@@ -1,11 +1,28 @@
 #include<drogon/drogon.h>
 
 int main(){
+    /**
+     * @brief 注册预路由拦截器处理 CORS 跨域请求的 OPTIONS 预检
+     *
+     * 该 Lambda 函数作为预路由建议被调用，用于拦截所有进入的 HTTP 请求。
+     * 对于 OPTIONS 方法的预检请求，直接构造响应并终止处理流程；
+     * 对于其他请求，则放行到后续的处理环节。
+     *
+     * @param req HTTP 请求指针，包含请求方法、头信息等完整信息
+     * @param stop 停止回调函数，接收一个 HttpResponsePtr 参数，用于终止请求处理并返回指定响应
+     * @param pass 通过回调函数，无参数，用于继续将请求传递到下一个处理阶段
+     */
     // Register pre-routing advice for CORS
     drogon::app().registerPreRoutingAdvice([](
         const drogon::HttpRequestPtr &req, 
         std::function<void(const drogon::HttpResponsePtr &)> &&stop,
         std::function<void()> &&pass) {
+        /**
+         * @brief 处理 CORS 预检 OPTIONS 请求
+         *
+         * 当检测到请求方法为 OPTIONS 时，构造 CORS 允许响应头并立即返回，
+         * 阻止请求继续向下处理。这是浏览器发起跨域请求前的标准预检流程。
+         */
         // Handle preflight OPTIONS requests
         if (req->method() == drogon::Options) {
             auto resp = drogon::HttpResponse::newHttpResponse();
@@ -18,9 +35,18 @@ int main(){
         }
         pass(); // Continue processing for non-OPTIONS requests
     });
-
+    /**
+     * @brief 注册后处理拦截器为所有响应添加 CORS 头
+     *
+     * 该 Lambda 函数在请求处理完成后被调用，确保所有 HTTP 响应都包含
+     * Access-Control-Allow-Origin 头，允许跨域访问。
+     *
+     * @param req HTTP 请求指针，包含请求的完整信息
+     * @param resp HTTP 响应指针，可修改响应内容和头信息
+     */
     // Register post-handling advice to add CORS headers to all responses
-    drogon::app().registerPostHandlingAdvice([](const drogon::HttpRequestPtr &req, const drogon::HttpResponsePtr &resp) {
+    drogon::app().registerPostHandlingAdvice([](const drogon::HttpRequestPtr &req,
+        const drogon::HttpResponsePtr &resp) {
         resp->addHeader("Access-Control-Allow-Origin", "*");
     });
     std::cout<<"Server is running!"<<std::endl;
