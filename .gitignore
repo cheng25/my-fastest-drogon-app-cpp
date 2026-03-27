@@ -4,3 +4,5 @@ uploads
 dependencies
 .env
 pgdata
+.idea/
+cmake-build-*/

@@ -11,8 +11,10 @@ services:
     ports:
       - "5432:5432" # Expose for local access; app connects via service name
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-      - ./pgdata:/var/lib/postgresql/data
+      - /drogon_dev/my-fastest-drogon-app-cpp/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - /data/usershare/PG/pgdata:/var/lib/postgresql/data
+      #- ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      #- ./pgdata:/var/lib/postgresql/data
     restart: unless-stopped
 
   # api:
