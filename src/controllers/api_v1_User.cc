@@ -26,7 +26,7 @@ void User::signup(const HttpRequestPtr& req, std::function<void (const HttpRespo
         std::string password = (*json)["password"].asString();
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(bcrypt::generateHash(password,5));
+        user.setPassword(bcrypt::generateHash(password,5));// 成本因子为 5 的 bcrypt 对明文密码进行哈希处理
         drogon::orm::Mapper<Users> mapper(app().getDbClient());
         mapper.insert(user, [callback](const Users &insertedUser) {
             Json::Value json;

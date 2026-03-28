@@ -12,7 +12,7 @@ echo "Installing jwt-cpp..."
 if [ ! -d "jwt-cpp" ]; then
   git clone --depth 1 https://github.com/Thalhammer/jwt-cpp.git
 else
-  echo "jwt-cpp already exists. Skipping clone."
+  echo "jwt-cpp already exists. Skipping clone." # 已存在则跳过克隆
 fi
 
 echo "Installing bcrypt-cpp..."
@@ -20,7 +20,7 @@ if [ ! -d "Bcrypt" ]; then
   git clone --depth 1 https://github.com/hilch/Bcrypt.cpp.git
   mv Bcrypt.cpp Bcrypt
 else
-  echo "Bcrypt already exists. Skipping clone."
+  echo "Bcrypt already exists. Skipping clone." # 已存在则跳过克隆
 fi
 
 echo "All dependencies installed successfully."

@@ -1,14 +1,15 @@
 cmake_minimum_required(VERSION 3.5)
 project(my_drogon_app)
 
-set(DROGON_ENABLE_ORM ON)
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(DROGON_ENABLE_ORM ON) # 启用 ORM 功能
+set(CMAKE_CXX_STANDARD 20) # 设置 C++ 标准为 20
+set(CMAKE_CXX_STANDARD_REQUIRED ON) # 要求使用 C++ 标准编译
 
-add_subdirectory(dependencies/jwt-cpp)
-add_subdirectory(dependencies/Bcrypt)
-find_package(Drogon REQUIRED)
+add_subdirectory(dependencies/jwt-cpp) # 添加 jwt-cpp 依赖
+add_subdirectory(dependencies/Bcrypt) # 添加 Bcrypt 依赖
+find_package(Drogon REQUIRED) # 查找 Drogon 库
 
+# 添加可执行文件
 add_executable(${PROJECT_NAME}
     src/main.cc
     src/controllers/api_v1_User.cc

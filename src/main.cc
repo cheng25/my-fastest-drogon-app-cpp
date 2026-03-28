@@ -2,7 +2,7 @@
 
 int main(){
     /**
-     * @brief 注册预路由拦截器处理 CORS 跨域请求的 OPTIONS 预检
+     * @brief 注册预路由拦截器处理 CORS(Cross-Origin Resource Sharing) 跨域请求的 OPTIONS 预检
      *
      * 该 Lambda 函数作为预路由建议被调用，用于拦截所有进入的 HTTP 请求。
      * 对于 OPTIONS 方法的预检请求，直接构造响应并终止处理流程；
@@ -26,10 +26,10 @@ int main(){
         // Handle preflight OPTIONS requests
         if (req->method() == drogon::Options) {
             auto resp = drogon::HttpResponse::newHttpResponse();
-            resp->addHeader("Access-Control-Allow-Origin", "*");
-            resp->addHeader("Access-Control-Allow-Methods", "*");
-            resp->addHeader("Access-Control-Allow-Headers", "*, Authorization");
-            resp->addHeader("Access-Control-Max-Age", std::to_string(86400));
+            resp->addHeader("Access-Control-Allow-Origin", "*");// 允许所有源的请求
+            resp->addHeader("Access-Control-Allow-Methods", "*");// 允许所有 HTTP 方法
+            resp->addHeader("Access-Control-Allow-Headers", "*, Authorization");// 允许所有请求头，显式包含用于 JWT 的 Authorization
+            resp->addHeader("Access-Control-Max-Age", std::to_string(86400));// 将预检结果缓存 24 小时
             stop(resp); // Send response and stop further processing
             return;
         }
@@ -47,8 +47,14 @@ int main(){
     // Register post-handling advice to add CORS headers to all responses
     drogon::app().registerPostHandlingAdvice([](const drogon::HttpRequestPtr &req,
         const drogon::HttpResponsePtr &resp) {
-        resp->addHeader("Access-Control-Allow-Origin", "*");
+        resp->addHeader("Access-Control-Allow-Origin", "*");// 允许所有源的请求
     });
+
+    /*以上：预处理路由和后置处理
+     *预路由建议（pre-routing advice）拦截 OPTIONS 预检请求并返回相应的头部信息，
+     *而处理后建议（post-handling advice），则将 Access-Control-Allow-Origin: 附加到每个响应
+     */
+    std::cout<<"ENV: JWT_SECRET="<<std::getenv("JWT_SECRET")<<std::endl;
     std::cout<<"Server is running!"<<std::endl;
     drogon::app().loadConfigFile("config.json").run();
     return 0;

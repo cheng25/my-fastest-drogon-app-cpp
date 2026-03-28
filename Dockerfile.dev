@@ -43,6 +43,7 @@ RUN groupadd -g ${GID} dev || true \
 
 WORKDIR /app
 
+# 先执行 sed -i 's/\r$//'，以处理代码检出时可能引入的 Windows 换行符问题——这是跨平台 CI 构建中一个细微但重要的细节
 # Fix line endings helper for dependencies script
 COPY dependencies.sh /app/dependencies.sh
 RUN sed -i 's/\r$//' /app/dependencies.sh

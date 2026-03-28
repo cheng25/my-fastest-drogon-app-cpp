@@ -37,8 +37,13 @@ WORKDIR /app
 COPY CMakeLists.txt /app/CMakeLists.txt
 COPY src/ /app/src/
 COPY dependencies.sh /app/dependencies.sh
+# 生产环境的 Dockerfile 通过将 config.docker.json 作为 config.json 复制到镜像中，自动处理配置文件
+# 数据库主机是唯一的区别。在本地运行时，127.0.0.1 连接到本机的 PostgreSQL。
+#在 Docker 容器中运行时，127.0.0.1 指向容器本身——而容器内并没有运行 PostgreSQL。
+#相反，Docker 配置使用 postgres，Docker Compose 会将其解析为 PostgreSQL 容器的内部 IP 地址。
 COPY config.docker.json /app/config.json
 
+# 先执行 sed -i 's/\r$//'，以处理代码检出时可能引入的 Windows 换行符问题——这是跨平台 CI 构建中一个细微但重要的细节
 # Fix line endings and fetch third-party deps expected by CMake add_subdirectory()
 RUN sed -i 's/\r$//' /app/dependencies.sh && bash dependencies.sh
 
