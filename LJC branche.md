@@ -5,12 +5,12 @@
 1. 修改docker-compose.yml
     指定卷目录
     ```yml
-    - /drogon_dev/my-fastest-drogon-app-cpp/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    - /home/l/drogon_dev/my-fastest-drogon-app-cpp/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     - /data/usershare/PG/pgdata:/var/lib/postgresql/data
     ```
 2. 启动数据库
     ```bash
-    sudo docker-compose -f /drogon_dev/my-fastest-drogon-app-cpp/docker-compose.yml up -d postgres
+    sudo docker-compose -f /home/l/drogon_dev/my-fastest-drogon-app-cpp/docker-compose.yml up -d postgres
     ```
 
 3. 启动开发环境
@@ -22,7 +22,7 @@
     -p 8083:8083 \
     -p 3001:3001 \
     -e JWT_SECRET=mysecretkey \
-    -v /drogon_dev/:/install/drogon_dev \
+    -v /home/l/drogon_dev/:/install/drogon_dev \
     --name dx_drogon_dev \
     -v /etc/localtime:/etc/localtime:ro \
     -d dx_drogon_dev:1.0
@@ -111,7 +111,7 @@
 
 10. 启动前端
     ```bash
-    cd /drogon_dev/my-fastest-drogon-app-cpp/frontend
+    cd /home/l/drogon_dev/my-fastest-drogon-app-cpp/frontend
     npm install
     npm run dev
     ```
@@ -119,10 +119,10 @@
     - `npm install` 报错ERR! code EACCES
         ```bash
         # 更改目录所有权
-        sudo chown -R $(whoami):$(whoami) /drogon_dev/my-fastest-drogon-app-cpp
+        sudo chown -R $(whoami):$(whoami) /home/l/drogon_dev/my-fastest-drogon-app-cpp
         
         # 进入项目目录（不要用 sudo！）
-        cd /drogon_dev/my-fastest-drogon-app-cpp/frontend
+        cd /home/l/drogon_dev/my-fastest-drogon-app-cpp/frontend
 
         # 删除旧依赖（可能已损坏）
         rm -rf node_modules package-lock.json

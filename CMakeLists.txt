@@ -29,6 +29,7 @@ target_link_libraries(${PROJECT_NAME}
     PRIVATE jwt-cpp::jwt-cpp
     PRIVATE bcrypt
 )
+# 用于禁用关于使用过时声明的警告
 add_compile_options(-Wno-deprecated-declarations)
 
 # 1. 设置源配置文件路径（假设在项目根目录）
